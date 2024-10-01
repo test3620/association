@@ -1,0 +1,136 @@
+<!-- === ETENDU DE 'base.html' ===-->
+{% extends "compte/base.html" %}
+
+<!-- CONTENU DE LA PAGE -->
+{% block body_membre %}
+   {% load static %}
+
+   <main>
+        <div class="container">
+            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                            <div class="d-flex justify-content-center py-4"><!-- Logo -->
+                                <a href="{% url "accueil" %}" class="logo d-flex align-items-center w-auto">
+                                    <img src="{% static "images/logo.png" %}" alt="">
+                                    <img src="{% static "images/logo2.png" %}" alt="">
+                                    <span class="d-none d-lg-block"></span>
+                                </a>
+                            </div><!-- End Logo -->
+        
+                            <div class="card mb-3">
+
+                                <div class="card-body">
+
+                                    <div class="pt-4 pb-2">
+                                        <h5 class="card-title text-center pb-0 fs-4">Devenir membre</h5>
+                                        <p class="text-center small">Entrez vos informations personnelles</p>
+                                    </div>
+
+                                    {% if messages %}                
+                                        {% for message in messages %}
+                                            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    <form method="post" action="" class="row g-3 needs-validation" enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+                                        <!-- EMAIL -->
+                                        <div class="col-12">
+                                            {{ form.email }}
+                                            <div class="text-danger">{{ form.email.errors }}</div>
+                                        </div>
+                                    
+                                        <!-- NOM -->
+                                        <div class="col-6">                        
+                                            {{ form.last_name }}
+                                            <div class="text-danger">{{ form.last_name.errors }}</div>
+                                        </div>
+
+                                        <!-- PRÉNOM -->
+                                        <div class="col-6">
+                                            {{ form.first_name }}
+                                            <div class="text-danger">{{ form.first_name.errors }}</div>
+                                        </div>
+
+                                        <!-- VILLE DE RÉSIDENCE -->
+                                        <div class="col-6"> 
+                                            {{ form.ville }}
+                                            <div class="itext-danger">{{ form.ville.errors }}</div>
+                                        </div>
+
+                                        <!-- QUARTIER -->
+                                        <div class="col-6"> 
+                                            {{ form.quartier }}
+                                            <div class="text-danger">{{ form.quartier.errors }}</div>
+                                        </div>
+
+                                        <!-- PROFESSION -->
+                                        <div class="col-12">
+                                            {{ form.profession }}
+                                            <div class="text-danger">{{ form.profession.errors }}</div>
+                                        </div>
+                                    
+                                        <!-- CONTACT -->
+                                        <label for="contact" class="form-label">Numéro de téléphone :</label>
+                                        <div class="d-flex mt-0 ">       
+                                            {{ form.contact }}                   
+                                        </div>
+                                        <div class="text-danger">{{ form.contact.errors }}</div>
+
+                                        <!-- DATE DE NAISSANCE -->
+                                        <label for="naissance" class="form-label">Date de naissance :</label>
+                                        <div class="col-12 d-flex mt-0">
+                                            {{ form.naissance }}
+                                            <div class="text-danger">{{ form.naissance.errors }}</div>
+                                        </div>
+
+                                        <!-- PHOTO D'IDENTITÉ -->
+                                        <label for="photo" class="form-label">Photo d'identité :</label>
+                                        <div class="col-12 d-flex mt-0">
+                                            {{ form.photo }}
+                                            <div class="text-danger">{{ form.photo.errors }}</div>
+                                        </div>
+
+                                        <!-- PASSWORD_1 -->
+                                        <div class="col-6">                         
+                                            {{ form.password1 }}                                            
+                                        </div>
+
+                                        <!-- PASSWORD_2 -->
+                                        <div class="col-6">
+                                            {{ form.password2 }}                                            
+                                        </div>
+                                        <div class="text-danger">{{ form.password1.errors }}</div>
+                                        <div class="text-danger">{{ form.password2.errors }}</div>
+
+                                        <div class="col-12">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
+                                                    <label class="form-check-label" for="acceptTerms">J'accepte les <a href="#">termes et conditions</a></label>
+                                                    <div class="text-danger"></div>
+                                                </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-primary w-100" type="submit">S'inscrire</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class="small mb-0">Êtes-vous membre ? <a href="{% url "connecte" %}">Se connecter</a></p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="credits">
+                                Conçu par <a href="#">ELECTRO Labo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}

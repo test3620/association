@@ -1,0 +1,94 @@
+<!--=== ETENDU DU FICHIER DE BASE ===-->
+{% extends "base.html" %}
+
+<!--=== TOP DE PAGE ===-->
+{% block top %}{% include "top.html" %}{% endblock %}
+
+<!--=== TÊTE DE PAGE ===-->
+{% block header %}{% include "header.html" %}{% endblock %}
+
+<!--=== PIED DE PAGE ===-->
+{% block footer %}{% include "footer.html" %}{% endblock %}
+
+<!--=== CONTENUS DE LA PAGE ===-->
+{% block body %}
+
+    <!--======= Breadcrumbs =======-->
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Règlements</h2>
+                <ol>
+                    <li><a href="{% url "accueil" %}">Accueil</a></li>
+                    <li>Règlements</li>
+                </ol>
+            </div>
+        </div>
+    </section><!-- End Breadcrumbs -->
+
+    
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="row justify-content-center" data-aos="fade-up">
+                <div class="col-lg-10">
+                    <div class="info-wrap">
+                        <div class="row">
+
+                            <div class="col-lg-4 info">
+                                <i class="bi bi-geo-alt"></i>
+                                <h4>Adresse :</h4>
+                                <p>Rue des Anas <br>Lomé Golf, LG 535022</p>
+                            </div>
+
+                            <div class="col-lg-4 info mt-4 mt-lg-0">
+                                <i class="bi bi-envelope"></i>
+                                <h4>Email :</h4>
+                                <p>infoajrdl@gmail.com<br>contact@ajrdl.com</p>
+                            </div>
+
+                            <div class="col-lg-4 info mt-4 mt-lg-0">
+                                <i class="bi bi-phone"></i>
+                                <h4>Tél :</h4>
+                                <p>+228 90 052 303<br>+228 99 931 193</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5 justify-content-center" data-aos="fade-up">
+                <div class="col-lg-10">
+                    <div class="card basic">
+                        <div class="card-body">
+                        <h5 class="card-title">Basic Questions</h5>
+    
+                        <div>
+                            <h6>1. Sauf que le plaisir de l'exercice doit être celui des choses ?
+                            </h6>
+                            <p>Regardez-les souvent. Car la douceur et le plaisir se tournent vers la flatterie. Cette matière n’est liée à rien dans l’origine des choses. Le résultat risque de plaire à chacun d’entre eux.
+                            </p>
+                        </div>
+    
+                        <div class="pt-2">
+                            <h6>2. Rejeter la douleur du rejet ?
+                            </h6>
+                            <p>Je n'aime pas ça. S'il vous plaît, laissez la douleur, car il découvrira forcément les douleurs laborieuses de toute la haine. Ils tombent dans l'ouverture et. La douleur de l'ensemble telle qu'elle est et les voies du problème.
+                            </p>
+                        </div>
+    
+                        <div class="pt-2">
+                            <h6>3. Qui critiquera que ce n’est jamais du plaisir ?
+                            </h6>
+                            <p>Car en trouvant dans le résultat le plaisir même du résultat heureux. Notre quête de plaisirs et de flatterie.
+                            </p>
+                        </div>
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Contact Section -->
+{% endblock %}

@@ -1,0 +1,83 @@
+{% load static %}
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="{% url "profile" %}" class="logo d-flex align-items-center">
+            <img src="{% static "images/logo.png" %}" alt="">
+            <span class="d-none d-lg-block"><img src="{% static "images/logo2.png" %}" alt=""></span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+        <form class="search-form d-flex align-items-center" method="POST" action="#">
+            <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+            <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+        </form>
+    </div><!-- End Search Bar -->
+    
+    {% include "compte/menu.html" %}
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        {% if user.is_staff %}
+
+            <li class="nav-item"><!-- Tableau de bord Nav -->
+                <a class="nav-link collapsed" href="{% url "profile" %}"><i class="bi bi-book-fill"></i><span>Carnet</span></a>
+            </li><!-- End Tableau de bord Nav -->
+            <li class="nav-item"><!-- bureau Nav -->
+                <a class="nav-link collapsed" href="{% url "bureau_liste" %}"><i class="bi bi-people-fill"></i><span>Administration</span></a>
+            </li><!-- End bureau -->
+            <li class="nav-item"><!-- Réunion Nav -->
+                <a class="nav-link collapsed" href="{% url "reunion" %}"><i class="bi bi-person-check"></i><span>Réunion</span></a>
+            </li><!-- End réunion -->
+            <li class="nav-item"><!-- Cotisations nav -->
+                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-card-heading"></i></i><span>Actualités</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{% url "actualite_liste" %}"><i class="bi bi-card-heading"></i><span>Liste</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url "commentaire_liste" %}"><i class="bi bi-chat-left-fill"></i><span>Commentaires</span></a>
+                    </li>
+                </ul>
+            </li><!-- End Cotisations nav -->
+            <li class="nav-item"><!-- Membres Nav -->
+                <a class="nav-link collapsed" href="{% url "admin" %}"><i class="bi bi-people"></i><span>Membres</span></a>
+            </li><!-- End Membres Nav -->
+            <li class="nav-item"><!-- Cotisations nav -->
+                <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-currency-dollar"></i><span>Cotisations</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="{% url "adhesion" %}"><i class="bi bi-pen"></i><span>Adhésion</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url "mensuel" %}"><i class="bi bi-calendar-month"></i><span>Mensuel</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url "naissance" %}"><i class="bi bi-cup-straw"></i><span>Naissance</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url "rejouissance" %}"><i class="bi bi-emoji-laughing"></i><span>Réjouissance</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url "don" %}"><i class="bi bi-gift"></i><span>Don</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url "deces" %}"><i class="bi bi-emoji-angry"></i><span>Décès</span></a>
+                    </li>
+                </ul>
+            </li><!-- End Cotisations nav -->
+        {% else %}
+            <li class="nav-item"><!-- Tableau de bord Nav -->
+                <a class="nav-link collapsed" href="{% url "profile" %}"><i class="bi bi-grid"></i><span>Carnet</span></a>
+            </li><!-- End Tableau de bord Nav -->
+        {% endif %} 
+    </ul>
+</aside><!-- End Sidebar-->

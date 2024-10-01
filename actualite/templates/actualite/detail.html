@@ -1,0 +1,198 @@
+<!-- ======= EXTENTION DE BASE ======= -->
+{% extends "base.html" %}
+
+<!-- ======= TOP DE PAGE ======= -->
+{% block top %}{% include "top.html" %}{% endblock %}
+
+<!-- ======= TÊTE DE PAGE ======= -->
+{% block header %}{% include "header.html" %}{% endblock %}
+
+<!-- ======= CONTENU DE PAGE ======= -->
+{% block body %}
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Détail</h2>
+                <ol>
+                    <li><a href="{% url "accueil" %}">Accueil</a></li>
+                    <li><a href="{% url "actualite" %}">Acualité</a></li>
+                    <li>Détail</li>
+                </ol>
+            </div>
+
+        </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Blog Single Section ======= -->
+        <section id="blog" class="blog">
+            <div class="container" data-aos="fade-up">
+
+            <div class="row">
+
+                <div class="col-lg-8 entries">
+                
+                    {#{% for actualite in actualite %}#}
+                        <article class="entry entry-single">
+
+                            <div class="entry-img">
+                                <img src="{{ actualite.image.url }}" alt="" class="img-fluid">
+                            </div>
+
+                            <h2 class="entry-title">
+                                <a href="{% url "detail" actualite.id %}">{{ actualite.titre|upper }}</a>
+                            </h2>
+
+                            <div class="entry-meta">
+                                <ul>
+                                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{ actualite.auteur.last_name }} {{ actualite.auteur.first_name }}</a></li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.html">{{ actualite.date }}</a></li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> 
+                                        {% if nombre <= 1 %}
+                                            <a href="blog-single.html">{{ nombre }} Commentaire</a>
+                                        {% else %}
+                                            <a href="blog-single.html">{{ nombre }} Commentaires</a>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="entry-content">
+                                <p>{{ actualite.contenu|safe }}</p>
+                            </div>
+
+                            <div class="entry-footer">
+                                <i class="bi bi-folder"></i>
+                                <ul class="cats">
+                                    <li><a href="#">Affaire</a></li>
+                                </ul>
+
+                                <i class="bi bi-tags"></i>
+                                <ul class="tags">
+                                    <li><a href="#">Créatif</a></li>
+                                    <li><a href="#">Type</a></li>
+                                    <li><a href="#">Marketing</a></li>
+                                </ul>
+                            </div>
+
+                        </article><!-- End blog entry -->
+                
+                        <div class="blog-author d-flex align-items-center">
+                                <img src="{{ actualite.auteur.photo.url }}" class="rounded-circle float-left" alt="">
+                                <div>
+                                    <h4>{{ actualite.auteur.last_name }} {{ actualite.auteur.first_name }}</h4>
+                                    <div class="social-links">
+                                        <a href="https://twitters.com/#"><i class="bi bi-twitter"></i></a>
+                                        <a href="https://facebook.com/#"><i class="bi bi-facebook"></i></a>
+                                        <a href="https://instagram.com/#"><i class="biu bi-instagram"></i></a>
+                                    </div>
+                                    <p>
+                                        Je suis membre du bureau de l'AJRDL.<br> Merci !
+                                    </p>
+                                </div> 
+                        </div><!-- End blog author bio -->
+                    {#{% endfor %}#}
+
+                    <div class="blog-comments">
+                        {% if nombre <= 1 %}
+                            <h4 class="comments-count">{{ nombre }} Commentaire</h4>
+                        {% else %}
+                            <h4 class="comments-count">{{ nombre }} Commentaires</h4>
+                        {% endif %}
+                        
+                        {% for commentaire in comments %}
+                            <div id="comment-1" class="comment">
+                                <div class="d-flex">
+                                    <div class="comment-img"><img class="rounded-circle" src="{{ commentaire.photo.url }}" alt=""></div>
+                                    <div>
+                                        <h5><a href="">{{ commentaire.nom }}</a> <i class="bi bi-chat-left-text-fill"></i></h5>
+                                        <time datetime="2020-01-01">{{ commentaire.date }}</time>
+                                        <p>{{ commentaire.contenu }}</p>
+                                    </div>
+                                </div>
+                            </div><!-- End comment #1 -->
+                        {% empty %}
+                            <p>Pas encore de commentaires.</p>
+                        {% endfor %}  
+
+                        <div class="reply-form">
+                            <h4>Votre commentaire</h4>
+                                
+                            {% if new_comment %}
+                                Votre commentaire a été ajouté.
+                            {% else %}
+                                <form class="needs-validation" novalidate action="" method="post", enctype="multipart/form">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            {{ form.nom }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col form-group text-justify">
+                                            {{ form.contenu }}
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-sm rounded-pill">Commenter</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div><!-- End blog comments -->
+                </div><!-- End blog entries list -->
+
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <h3 class="sidebar-title">Recherche</h3>
+                        <div class="sidebar-item search-form">
+                            <form action="">
+                                <input type="text">
+                                <button type="submit"><i class="bi bi-search"></i></button>
+                            </form>
+                        </div><!-- Fin sidebar recherche formn -->
+
+                        <h3 class="sidebar-title">Catégories</h3>
+                        <div class="sidebar-item categories">
+                            <ul>
+                                <li><a href="#">Réunion <span>{{ reunion }}</span></a></li>
+                                <li><a href="#">Naissance <span>{{ naissance }}</span></a></li>
+                                <li><a href="#">Réjouissance <span>{{ rejouissance }}</span></a></li>
+                                <li><a href="#">Don <span>{{ don }}</span></a></li>
+                                <li><a href="#">Décès <span>{{ deces }}</span></a></li>
+                            </ul>
+                        </div><!-- Fin sidebar catégories -->
+
+                        <h3 class="sidebar-title">Actualité récentes</h3>
+                        <div class="sidebar-item recent-posts">
+                            {% for derniers in derniers_articles %}
+                                <div class="post-item clearfix">
+                                    <img src="{{ derniers.image.url }}" alt="">
+                                    <h4><a href="{% url "detail" derniers.id %}">{{ derniers.titre }}</a></h4>
+                                    <time datetime="2020-01-01">{{ derniers.date }}</time>
+                                </div>
+                            {% endfor %}  
+                        </div><!-- End sidebar articles recents-->
+
+                        <h3 class="sidebar-title">Mots clés</h3>
+                        <div class="sidebar-item tags">
+                            <ul>
+                                <li><a href="#">Réunion</a></li>
+                                <li><a href="#">Naissance</a></li>
+                                <li><a href="#">Réjouissance</a></li>
+                                <li><a href="#">Don</a></li>
+                                <li><a href="#">Réalisation</a></li>
+                                <li><a href="#">Décès</a></li>
+                            </ul>
+                        </div><!-- End sidebar tags -->
+                    </div><!-- End sidebar -->
+                </div><!-- End blog sidebar -->
+            </div>
+
+        </div>
+    </section><!-- End Blog Single Section -->
+
+{% endblock %}
+
+<!-- ======= PIED DE PAGE ======= -->
+{% block footer %}{% include "footer.html" %}{% endblock %}

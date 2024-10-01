@@ -1,0 +1,121 @@
+<!-- ======= EXTENTION DE BASE ======= -->
+{% extends "base.html" %}
+
+<!-- ======= TOP DE PAGE ======= -->
+{% block top %}{% include "top.html" %}{% endblock %}
+
+<!-- ======= TÊTE DE PAGE ======= -->
+{% block header %}{% include "header.html" %}{% endblock %}
+
+<!-- ======= CONTENU DE PAGE ======= -->
+{% block body %}
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Actualité</h2>
+                <ol>
+                    <li><a href="{% url "accueil" %}">Accueil</a></li>
+                    <li>Actualité</li>
+                </ol>
+            </div>
+        </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-8 entries">
+                    {% for actualite in actualite %}
+                        <article class="entry">
+                            <div class="entry-img">
+                                <img src="{{ actualite.image.url }}" alt="Image" class="img-fluid" width="1024" height="768">
+                            </div>
+                            
+                            <h2 class="entry-title">
+                                <a href="{% url "detail" actualite.id %}">{{ actualite.titre|upper }}</a>
+                            </h2>
+
+                            <div class="entry-meta">
+                                <ul>
+                                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> 
+                                        <a href="blog-single.html">{{ actualite.auteur.last_name }} {{ actualite.auteur.first_name }}</a>
+                                    </li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> 
+                                        <a href="blog-single.html"><time datetime="2020-01-01">{{ actualite.date }}</time></a>
+                                    </li>                
+                                </ul>
+                            </div>
+
+                            <div class="entry-content">
+                                <p>{{ actualite.contenu|safe|truncatewords:40 }}</p>
+                                <div class="read-more rounded-pill">
+                                    <a class="rounded-pill" href="{% url "detail" actualite.id %}">Détail</a>
+                                </div>
+                            </div>
+                        </article><!-- Fin article d'actualité -->
+                    {% endfor %}  
+                
+                    <div class="blog-pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item"><a class="page-link" href="#">Précédent</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
+                        </ul>
+                    </div>
+                </div><!-- Fin blog entries list -->
+
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <h3 class="sidebar-title">Recherche</h3>
+                        <div class="sidebar-item search-form">
+                            <form action="">
+                                <input type="text">
+                                <button type="submit"><i class="bi bi-search"></i></button>
+                            </form>
+                        </div><!-- Fin sidebar recherche formn -->
+
+                        <h3 class="sidebar-title">Catégories</h3>
+                        <div class="sidebar-item categories">
+                            <ul>
+                                <li><a href="#">Réunion <span>{{ reunion }}</span></a></li>
+                                <li><a href="#">Naissance <span>{{ naissance }}</span></a></li>
+                                <li><a href="#">Réjouissance <span>{{ rejouissance }}</span></a></li>
+                                <li><a href="#">Don <span>{{ don }}</span></a></li>
+                                <li><a href="#">Décès <span>{{ deces }}</span></a></li>
+                            </ul>
+                        </div><!-- Fin sidebar catégories -->
+
+                        <h3 class="sidebar-title">Actualité récentes</h3>
+                        <div class="sidebar-item recent-posts">
+                            {% for derniers in derniers_articles %}
+                                <div class="post-item clearfix">
+                                    <img src="{{ derniers.image.url }}" alt="">
+                                    <h4><a href="{% url "detail" derniers.id %}">{{ derniers.titre }}</a></h4>
+                                    <time datetime="2020-01-01">{{ derniers.date }}</time>
+                                </div>
+                            {% endfor %}  
+                        </div><!-- End sidebar articles recents-->
+
+                        <h3 class="sidebar-title">Mots clés</h3>
+                        <div class="sidebar-item tags">
+                            <ul>
+                                <li><a href="#">Réunion</a></li>
+                                <li><a href="#">Naissance</a></li>
+                                <li><a href="#">Réjouissance</a></li>
+                                <li><a href="#">Don</a></li>
+                                <li><a href="#">Décès</a></li>
+                            </ul>
+                        </div><!-- End sidebar tags -->
+                    </div><!-- End sidebar -->
+                </div><!-- End blog sidebar -->
+            </div>
+        </div>
+    </section><!-- End Blog Section -->
+{% endblock %}
+
+<!-- ======= PIED DE PAGE ======= -->
+{% block footer %}{% include "footer.html" %}{% endblock %}

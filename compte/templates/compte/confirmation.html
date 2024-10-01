@@ -1,0 +1,13 @@
+{% autoescape off %}
+    Salut {{ nom }} {{ prenom }},
+
+    Merci de vous être inscrit sur AJRDL. Veuillez cliquer sur le lien ci-dessous pour activer votre compte :
+    Lien de l'activation : http://{{ domain }}{% url 'active' uidb64=uid token=token %}
+
+    Si vous n'avez pas demandé cette inscription, veuillez ignorer cet email.
+
+
+
+    Merci !
+    Le bureau de l'AJRDL
+{% endautoescape %}

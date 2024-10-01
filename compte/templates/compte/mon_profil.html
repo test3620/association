@@ -1,0 +1,151 @@
+<!-- ETENDU DE LA PAGE DE BASE DE MEMBRES -->
+{% extends "compte/base.html" %}
+
+<!-- TÊTE DE LA PAGE DE PROFILE D'UN MEMBRE -->
+{% block header_membre %}{% include "compte/header.html" %}{% endblock %}
+
+<!-- CONTENU DE LA PAGE DE PROFILE D'UN MEMBRE-->
+{% block body_membre %}
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Profil</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url "accueil" %}">Accueil</a></li>
+                    <li class="breadcrumb-item active">Profil</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        {% if messages %}                
+            {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        {% endif %}      
+        
+        <div class="text-danger">{{ form.old_password.errors }}</div>
+        <div class="text-danger">{{ form.new_password1.errors }}</div>
+        <div class="text-danger">{{ form.new_password2.errors }}</div>
+
+        <section class="section profile">
+            <div class="row">
+                <div class="col-xl-4">
+
+                    <div class="card">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+                            <img src="{{ user.photo.url }}" alt="Profile" class="rounded-circle">
+                            <h2 class="text-nowrap">{{ user.last_name }} {{ user.first_name }}</h2>
+                            <h3>{{ user.profession }}</h3>
+                            <div class="social-links mt-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-8">
+
+                    <div class="card">
+                        <div class="card-body pt-3">
+                            <!-- Bordered Tabs -->
+                            <ul class="nav nav-tabs nav-tabs-bordered">
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Vue</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Profil</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">MDP</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content pt-2">
+                                <!-- Apercu du profile -->
+                                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                    <h5 class="card-title">A propos</h5>
+                                    <p class="small">
+                                        Vous êtes originaire de Datcha, vivant à {{ user.ville }}. 
+                                        Vous ëtes {{ user.profession }} et accessible sur le {{ user.contact }}. 
+                                        Vous ëtes membre de l'AJRDL le {{ user.adhesion }}.<br> Merci !
+                                    </p>
+
+                                    <h5 class="card-title">Détails du profil</h5>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label ">Nom prénom</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.last_name }} {{ user.first_name }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Naissance</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.naissance }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Profession</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.profession }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Ville</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.ville }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Quartier</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.quartier }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Contact</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.contact }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Email</div>
+                                        <div class="col-lg-9 col-md-8">{{ user.email }}</div>
+                                    </div>
+                                </div><!-- End Apercu du profile -->
+
+                                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                                    <!-- Profile Edit Form -->
+                                    <form>
+                                        <div class="row mb-3">
+                                            <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Photo</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <img src="{{user.photo.url}}" alt="Profile">
+                                                <div class="pt-2">
+                                                    <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                                                    <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form><!-- End Profile Edit Form -->
+                                </div>                              
+
+                                <div class="tab-pane fade pt-3" id="profile-change-password">           
+                                    <!-- Change Password Form -->
+                                        <form class="needs-validation" novalidate method="post">
+                                            {% csrf_token %}                        
+                                            <div class="text-danger">{{ form.old_password.errors }}</div>
+                                            <div class="mb-3">
+                                                {{ form.old_password }}  
+                                            </div>                                        
+                                            <div class="text-danger">{{ form.new_password1.errors }}</div>
+                                            <div class="mb-3">
+                                                {{ form.new_password1 }}
+                                            </div>                                                                                 
+                                            <div class="text-danger">{{ form.new_password2.errors }}</div>
+                                            <div class="mb-3">
+                                                {{ form.new_password2 }}
+                                            </div>               
+                                            <div class="text-center">
+                                                <button type="submit" class="btn btn-primary btn-sm rounded-pill">Modifier</button>
+                                            </div>
+                                    </form><!-- End Change Password Form -->
+                                </div>
+                            </div><!-- End Bordered Tabs -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main><!-- End #main -->
+{% endblock %}
+
+<!-- PIED DE LA PAGE DE PROFILE D'UN MEMBRE -->
+{% block footer_membre %}{% include "compte/footer.html" %}{% endblock %}

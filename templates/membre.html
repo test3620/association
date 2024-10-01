@@ -1,0 +1,53 @@
+<!-- === ETENDU DE LA BASE === -->
+{% extends "base.html" %}
+
+<!-- === TOP DE PAGE === -->
+{% block top %}{% include "top.html" %}{% endblock %}
+
+<!-- === TÊTE DE PAGE === -->
+{% block header %}{% include "header.html" %}{% endblock %}
+
+<!-- === CONTENUS DE LA PAGE === -->
+{% block body %}
+
+   <!-- ======= Breadcrumbs ======= -->
+   <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Membre</h2>
+                <ol>
+                    <li><a href="{% url "accueil" %}">Accueil</a></li>
+                    <li>Membre</li>
+                </ol>
+            </div>
+        </div>
+   </section><!-- End Breadcrumbs -->
+         
+   <!-- ======= Testimonials Section ======= -->
+   <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="row">
+                {% for membre in membre %}
+                    <div class="col-lg-6" data-aos="fade-up">
+                        <div class="testimonial-item mt-4">
+                            <img src="{{ membre.photo.url }}" class="testimonial-img" alt="Photo">
+                            <!-- Nom et Prénom -->
+                            <h5 class="mt-4">{{ membre.last_name|upper }} {{ membre.first_name|capfirst }}</h5>
+                            <!-- Profession -->
+                            <h4> {{ membre.profession|capfirst }}</h4><br>
+                            <p>    
+                                Je suis originaire de <strong>Datcha</strong>, vivant à <strong>{{ membre.ville }}</strong>. 
+                                Je suis <strong>{{ membre.profession }}</strong> et accessible sur le <strong>{{ membre.contact }}</strong>. 
+                                Je suis membre d'AJRDL le <strong>{{ membre.adhesion }}</strong>.<br> Merci !    
+                            </p>
+                            <button class="btn btn-info mt-4 btn-sm rounded-pill"><a class="text-white" href="{% url "connecte" %}">Connecter</a></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+<!-- === PIED DE PAGE ===-->
+{% block footer %}{% include "footer.html" %}{% endblock %}

@@ -1,0 +1,400 @@
+<!-- ETENDU DE LA PAGE DE BASE DE MEMBRES -->
+{% extends "compte/base.html" %}
+
+<!-- TÊTE DE LA PAGE DE PROFILE D'UN MEMBRE -->
+{% block header_membre %}{% include "compte/header.html" %}{% endblock %}
+
+<!-- CONTENU DE LA PAGE DE PROFILE D'UN MEMBRE-->
+{% block body_membre %}
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Carnet</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'accueil' %}">Accueil</a></li>
+                    <li class="breadcrumb-item active">Carnet</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <div class="col-lg-8">
+                    <div class="row">
+
+                        <!-- Effectif -->
+                        <div class="col-xxl-4 col-md-12">
+                            <div class="card info-card revenue-card">
+                                <span class="badge rounded-pill bg-info text-white">
+                                    <marquee behavior="alternate">EFFECTIF</marquee>
+                                </span>
+                                <strong class="text-center"> 
+                                    {{ effectif }} 
+                                </strong>
+                            </div>
+                        </div><!-- End Effectif -->      
+
+                        <!-- Payer -->
+                        <div class="col-xxl-4 col-md-6">
+                            <div class="card info-card revenue-card">
+                                <span class="badge rounded-pill bg-success text-white">
+                                    <marquee behavior="alternate">PAYÉ</marquee>
+                                </span>
+                                <strong class="text-success text-center"> 
+                                    XOF {{ total_paye }}
+                                </strong>
+                            </div>
+                        </div><!-- End Payer -->      
+
+                        <!-- Impayer -->
+                        <div class="col-xxl-4 col-md-6">
+                            <div class="card info-card revenue-card">
+                                <span class="badge rounded-pill bg-danger text-white">
+                                    <marquee behavior="alternate">IMPAYÉ</marquee>
+                                </span>
+                                <strong class="text-danger text-center"> 
+                                    XOF {{ total_impaye }}
+                                </strong>
+                            </div>
+                        </div><!-- End Impayer -->   
+                        
+                        <!-- REUNION -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+
+                                <div class="card-body table-responsive">
+                                    <h5 class="card-title mb-0">Réunion</h5>
+                                    <table class="table table-hover table-striped">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th>REUNION</th>
+                                                <th>PRE</th>
+                                                <th>RET</th>
+                                                <th>PER</th>
+                                                <th>ABS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            {% for reunion in user.reunion_set.all %}
+                                                <tr class="text-nowrap">
+                                                    <td scope="col">{{ reunion.reunion }}</td>
+                                                    {% if reunion.presence %}
+                                                        <td scope="col"><i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i></td> 
+                                                    {% else %}
+                                                        <td scope="col"><i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i></td> 
+                                                    {% endif %}
+                                                    {% if reunion.retard %}
+                                                        <td scope="col"><i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i></td> 
+                                                    {% else %}
+                                                        <td class="text-center"  scope="col"><i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i></td> 
+                                                    {% endif %}           
+                                                    {% if reunion.permission %}
+                                                        <td scope="col"><i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i></td> 
+                                                    {% else %}
+                                                        <td scope="col"><i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i></td> 
+                                                    {% endif %}     
+                                                    {% if reunion.absence %}
+                                                        <td scope="col"><i class="bi bi-check-circle-fill" style="color: #2ecc71;"></i></td> 
+                                                    {% else %}
+                                                        <td scope="col"><i class="bi bi-x-circle-fill" style="color: #e74c3c;"></i></td> 
+                                                    {% endif %}   
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End REUNION -->
+
+                        <!-- ADHÉSION -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">                   
+                                <div class="card-body">
+                                    <h5 class="card-title mb-0">Adhésion <br><br>
+                                        {% if payer_adhesion == 0 %}
+                                            <span class="badge rounded-pill bg-danger text-white">Impayé</span><strong class="text-danger"> XOF {{ impayer_adhesion }}</strong>
+                                        {% else %}
+                                            <span class="badge rounded-pill bg-success text-white">Payé</span><strong class="text-success"> XOF {{ payer_adhesion }}</strong>
+                                        {% endif %} 
+                                    </h5>
+                                    <table class="table table-hover table-striped mt-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">MONTANT</th>
+                                                <th scope="col">REUNION</th>
+                                                <th scope="col">LIEU</th>
+                                                <th scope="col">STATUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>                
+                                            <tr class="text-nowrap">
+                                                <td scope="row">XOF {{ user.monadhesion.montant }}</td>
+                                                <td>{{ user.monadhesion.reunion }}</td>
+                                                <td>{{ user.monadhesion.lieu }}</td>
+                                                {% if user.monadhesion.paye %} 
+                                                    <td> <span class="badge rounded-pill bg-success">Payé</span> </td> 
+                                                {% else %} 
+                                                    <td> <span class="badge rounded-pill bg-danger">Impayé</span> </td> 
+                                                {% endif %}
+                                            </tr>                               
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End ADHESION -->
+             
+                        <!-- MENSUEL -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+
+                                <div class="card-body table-responsive">
+                                    <h5 class="card-title mb-0">Mensuel <br><br>
+                                        <span class="badge rounded-pill bg-success text-white">payé</span><strong class="text-success"> XOF {{ payer_mensuel }}</strong><br>
+                                        <span class="badge rounded-pill bg-danger text-white mt-2">Impayé</span><strong class="text-danger"> XOF {{ impayer_mensuel }}</strong>                    
+                                    </h5>
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">MONTANT</th>
+                                                <th scope="col">REUNION</th>
+                                                <th scope="col">LIEU</th>
+                                                <th scope="col">STATUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mensuel in user.mensuel_set.all %}
+                                                <tr class="text-nowrap">
+                                                    <td scope="row"> XOF {{ mensuel.montant }}</td>
+                                                    <td>{{ mensuel.reunion }}</td>
+                                                    <td>{{ mensuel.lieu }}</td>
+                                                    {% if mensuel.paye %} 
+                                                        <td> <span class="badge rounded-pill bg-success">Payé</span> </td> 
+                                                    {% else %} 
+                                                        <td> <span class="badge rounded-pill bg-danger">Impayé</span> </td> 
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End MENSUEL -->
+
+                        <!-- NAISSANCE -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-0">Naissance <br><br>
+                                        <span class="badge rounded-pill bg-success text-white">payé</span><strong class="text-success"> XOF {{ payer_naissance }}</strong><br>
+                                        <span class="badge rounded-pill bg-danger text-white mt-2">Impayé</span><strong class="text-danger"> XOF {{ impayer_naissance }}</strong>                                                
+                                    </h5>
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">MONTANT</th>
+                                                <th scope="col">ENFANT</th>
+                                                <th scope="col">REUNION</th>
+                                                <th scope="col">STATUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for naissance in user.nouveaune_set.all %}
+                                                <tr class="text-nowrap">
+                                                    <td scope="row"> XOF {{ naissance.montant }}</td>
+                                                    <td>{{ naissance.enfant }}</td>
+                                                    <td>{{ naissance.reunion }}</td>
+                                                    {% if naissance.paye %} 
+                                                        <td> <span class="badge rounded-pill bg-success">Payé</span> </td> 
+                                                    {% else %} 
+                                                        <td> <span class="badge rounded-pill bg-danger">Impayé</span> </td> 
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End NAISSANCE -->
+
+                        <!-- REJOUISSANCE -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-0">Réjouissance<br><br>
+                                        <span class="badge rounded-pill bg-success text-white">payé</span><strong class="text-success"> XOF {{ payer_rejouissance }}</strong><br>
+                                        <span class="badge rounded-pill bg-danger text-white mt-2">Impayé</span><strong class="text-danger"> XOF {{ impayer_rejouissance }}</strong>                                  
+                                    </h5>
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">MONTANT</th>
+                                                <th scope="col">DATE</th>
+                                                <th scope="col">LIEU</th>
+                                                <th scope="col">STATUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for rejouissance in user.rejouissance_set.all %}
+                                                <tr class="text-nowrap">
+                                                    <td scope="row"> XOF {{ rejouissance.montant }}</td>
+                                                    <td>{{ rejouissance.date }}</td>
+                                                    <td>{{ rejouissance.lieu }}</td>
+                                                    {% if rejouissance.paye %} 
+                                                        <td> <span class="badge rounded-pill bg-success">Payé</span> </td> 
+                                                    {% else %} 
+                                                        <td> <span class="badge rounded-pill bg-danger">Impayé</span> </td> 
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End RÉJOUISSANCE -->
+
+                        <!-- DON -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">                    
+                                <div class="card-body">
+                                    <h5 class="card-title mb-0">Don<br><br>
+                                        <span class="badge rounded-pill bg-success text-white">payé</span><strong class="text-success"> XOF {{ payer_don }}</strong><br>
+                                        <span class="badge rounded-pill bg-danger text-white mt-2">Impayé</span><strong class="text-danger"> XOF {{ impayer_don }}</strong>                                            
+                                    </h5>
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">MONTANT</th>
+                                                <th scope="col">OBJET</th>
+                                                <th scope="col">REUNION</th>
+                                                <th scope="col">STATUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for don in user.don_set.all %}
+                                                <tr class="text-nowrap">
+                                                    <td scope="row"> XOF {{ don.montant }}</td>
+                                                    <td>{{ don.objet }}</td>
+                                                    <td>{{ don.reunion }}</td>
+                                                    {% if don.paye %} 
+                                                        <td> <span class="badge rounded-pill bg-success">Participé</span> </td> 
+                                                    {% else %} 
+                                                        <td> <span class="badge rounded-pill bg-danger">Non participé</span> </td> 
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End DON -->
+
+                        <!-- DÉCÈS-->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-0">Décès<br><br>
+                                        <span class="badge rounded-pill bg-success text-white">payé</span><strong class="text-success"> XOF {{ payer_deces }}</strong><br>
+                                        <span class="badge rounded-pill bg-danger text-white mt-2">Impayé</span><strong class="text-danger"> XOF {{ impayer_deces }}</strong>                   
+                                    </h5>
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">MONTANT</th>
+                                                <th scope="col">DÉCÈS</th>
+                                                <th scope="col">REUNION</th>
+                                                <th scope="col">STATUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for deces in user.deces_set.all %}
+                                                <tr class="text-nowrap">
+                                                    <td scope="row"> XOF {{ deces.montant }}</td>
+                                                    <td>{{ deces.deces }}</td>
+                                                    <td>{{ deces.reunion }}</td>
+                                                    {% if deces.paye %} 
+                                                        <td> <span class="badge rounded-pill bg-success">Payé</span> </td> 
+                                                    {% else %} 
+                                                        <td> <span class="badge rounded-pill bg-danger">Impayé</span> </td> 
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- End DÉCÈS -->          
+                    </div>
+                </div><!-- End Left side columns -->
+
+                <!-- Right side columns -->
+                <div class="col-lg-4">
+                    <!-- Website Traffic -->
+                        <div class="card-body pb-0">
+                            <h5 class="card-title">Trafic Web <span>| Aujourd'hui</span></h5>
+                            <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                echarts.init(document.querySelector("#trafficChart")).setOption({
+                                    tooltip: {
+                                    trigger: 'item'
+                                    },
+                                    legend: {
+                                    top: '5%',
+                                    left: 'center'
+                                    },
+                                    series: [{
+                                    name: 'Access From',
+                                    type: 'pie',
+                                    radius: ['40%', '70%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        show: false,
+                                        position: 'center'
+                                    },
+                                    emphasis: {
+                                        label: {
+                                        show: true,
+                                        fontSize: '18',
+                                        fontWeight: 'bold'
+                                        }
+                                    },
+                                    labelLine: {
+                                        show: false
+                                    },
+                                    data: [{
+                                        value: 1048,
+                                        name: 'Search Engine'
+                                        },
+                                        {
+                                        value: 735,
+                                        name: 'Direct'
+                                        },
+                                        {
+                                        value: 580,
+                                        name: 'Email'
+                                        },
+                                        {
+                                        value: 484,
+                                        name: 'Union Ads'
+                                        },
+                                        {
+                                        value: 300,
+                                        name: 'Video Ads'
+                                        }]}]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div><!-- End Website Traffic -->
+                </div><!-- End Right side columns -->
+            </div>
+        </section>
+    </main><!-- End #main -->
+{% endblock %}
+
+<!-- PIED DE LA PAGE DE PROFILE D'UN MEMBRE -->
+{% block footer_membre %}{% include "compte/footer.html" %}{% endblock %}

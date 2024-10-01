@@ -1,0 +1,28 @@
+{% load static %}
+
+ <!-- ======= Header ======= -->
+ <header id="header" class="d-flex align-items-center">
+    <div class="container d-flex justify-content-between">
+        
+        <div class="logo">
+            <!-- <h1 class="text-light"><a href="index.html">AJRDL</a></h1> -->
+            <!-- Uncomment below if you prefer to use an image logo -->
+            <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+            <a href="{% url "accueil" %}"><img src="{% static "img/logo2.png" %}" alt="" class="img-fluid"></a>
+            <a href="{% url "accueil" %}"><img src="{% static "img/Image1.png" %}" alt="" class="img-fluid"></a>
+        </div>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li><a class="active" href="{% url "accueil" %}">ACCUEIL</a></li>
+                <li><a href="{% url "membre" %}">MEMBRES</a></li>
+                <li><a href="{% url "bureau" %}">BUREAU</a></li>
+                <li><a href="{% url "actualite" %}">ACTUALITÉ</a></li>
+                <li><a href="{% url "contact" %}">CONTACT</a></li>
+                <li><a class="text-primary" href="{% url 'inscrire' %}">INSCRIPTION</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+    </div>
+    
+</header><!-- End Header -->

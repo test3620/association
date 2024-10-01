@@ -1,0 +1,194 @@
+<!-- ETENDU DE LA PAGE DE BASE DE MEMBRES -->
+{% extends "compte/base.html" %}
+
+<!-- TÊTE DE LA PAGE DE PROFILE D'UN MEMBRE -->
+{% block header_membre %}{% include "compte/header.html" %}{% endblock %}
+
+<!-- CONTENU DE LA PAGE DE PROFILE D'UN MEMBRE-->
+{% block body_membre %}
+    <main id="main" class="main">
+
+        {% if messages %}                
+            {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="pagetitle">
+            <h1>Don</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'accueil' %}">Accueil</a></li>
+                    <li class="breadcrumb-item active">Don</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <div class="col-lg-8">
+                    <div class="row">
+
+                        <!-- Effectif -->
+                        <div class="col-xxl-4 col-md-12">
+                            <div class="card info-card revenue-card">
+                                <span class="badge rounded-pill bg-info text-white">
+                                    <marquee behavior="alternate">EFFECTIF</marquee>
+                                </span>
+                                <strong class="text-center"> 
+                                    {{ effectif }} 
+                                </strong>
+                            </div>
+                        </div><!-- End Effectif -->      
+
+                        <!-- Payer -->
+                        <div class="col-xxl-4 col-md-6">
+                            <div class="card info-card revenue-card">
+                                <span class="badge rounded-pill bg-success text-white">
+                                    <marquee behavior="alternate">PAYÉ</marquee>
+                                </span>
+                                <strong class="text-success text-center"> 
+                                    XOF {{ payer_don }}
+                                </strong>
+                            </div>
+                        </div><!-- End Payer -->      
+
+                        <!-- Impayer -->
+                        <div class="col-xxl-4 col-md-6">
+                            <div class="card info-card revenue-card">
+                                <span class="badge rounded-pill bg-danger text-white">
+                                    <marquee behavior="alternate">IMPAYÉ</marquee>
+                                </span>
+                                <strong class="text-danger text-center"> 
+                                    XOF {{ impayer_don }}
+                                </strong>
+                            </div>
+                        </div><!-- End Impayer -->      
+
+                        <!-- LISTE DES MEMBRES -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-0">Don</h5>
+                                    <button class="btn btn-dark btn-sm mb-3 rounded-pill">
+                                        <a class="text-white" href="{% url "don_ajoute" %}">Cotiser </a> <i class="bi bi-currency-yen"></i>
+                                    </button>
+                                    <table class=" table table-striped text-nowrap table-bordered">
+                                        <thead  class="text-center">
+                                            <tr>
+                                                <th>NOM PRENOM</th>
+                                                <th>DESTINATION</th>
+                                                <th>MONTANT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for don in don %}
+                                                <tr class="text-button">
+                                                    <td scope="col">
+                                                        <a class="icon" href="#" data-bs-toggle="dropdown">
+                                                            {{ don.membre.last_name }} {{ don.membre.first_name }}
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                            <li><a class="dropdown-item" href="{% url "don_edite" don.id %}">Editer</a></li>
+                                                            <li><a class="dropdown-item" href="#">Suprimer</a></li>
+                                                        </ul>
+                                                    </td>
+                                                    <td scope="col">{{ don.objet }}</td>
+                                                    <td scope="col">OXF {{ don.montant }}</td> 
+                                                    {% if don.paye %} 
+                                                        <td class="text-center"><span class="badge bg-success rounded-pill">Payé</span></td> 
+                                                    {% else %} 
+                                                        <td class="text-center"><span class="badge bg-danger rounded-pill">Impayé</span></td> 
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- END LISTE DES MEMBRES -->       
+                    </div>
+                </div><!-- End Left side columns -->
+
+                <!-- Right side columns -->
+                <div class="col-lg-4">
+                    <!-- Website Traffic -->
+                    <div class="card">
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start"><h6>Filtre</h6></li>
+                                    <li><a class="dropdown-item" href="#">Aujourd'hui</a></li>
+                                    <li><a class="dropdown-item" href="#">Ce mois</a></li>
+                                    <li><a class="dropdown-item" href="#">Cette année</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body pb-0">
+                            <h5 class="card-title">Trafic Web <span>| Aujourd'hui</span></h5>
+                            <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                echarts.init(document.querySelector("#trafficChart")).setOption({
+                                    tooltip: {
+                                    trigger: 'item'
+                                    },
+                                    legend: {
+                                    top: '5%',
+                                    left: 'center'
+                                    },
+                                    series: [{
+                                    name: 'Access From',
+                                    type: 'pie',
+                                    radius: ['40%', '70%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        show: false,
+                                        position: 'center'
+                                    },
+                                    emphasis: {
+                                        label: {
+                                        show: true,
+                                        fontSize: '18',
+                                        fontWeight: 'bold'
+                                        }
+                                    },
+                                    labelLine: {
+                                        show: false
+                                    },
+                                    data: [{
+                                        value: 1048,
+                                        name: 'Search Engine'
+                                        },
+                                        {
+                                        value: 735,
+                                        name: 'Direct'
+                                        },
+                                        {
+                                        value: 580,
+                                        name: 'Email'
+                                        },
+                                        {
+                                        value: 484,
+                                        name: 'Union Ads'
+                                        },
+                                        {
+                                        value: 300,
+                                        name: 'Video Ads'
+                                        }]}]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div><!-- End Website Traffic -->
+                </div><!-- End Right side columns -->
+            </div>
+        </section>
+    </main><!-- End #main -->
+{% endblock %}
+
+<!-- PIED DE LA PAGE DE PROFILE D'UN MEMBRE -->
+{% block footer_membre %}{% include "compte/footer.html" %}{% endblock %}
