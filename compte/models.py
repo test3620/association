@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from PIL import Image, ImageDraw, ImageFont
 
 
 class CustomUserManager(BaseUserManager): # Gestionnaire d'utilisateur personnalisé.
@@ -46,14 +47,14 @@ class CustomUserManager(BaseUserManager): # Gestionnaire d'utilisateur personnal
 class Membre(AbstractUser): # Model d'utilisateur.
     username = None
 
-    contact = PhoneNumberField(unique=True, default='+22891180391')
+    contact = PhoneNumberField(unique=True)
     email = models.EmailField(unique=True)
     ville = models.CharField(max_length=50)
     quartier = models.CharField(max_length=50)
     profession = models.CharField(max_length=50)
-    naissance = models.DateField(default='1984-09-15')
-    photo = models.ImageField(default='default.jpg', upload_to='membre/identite/', height_field=None, width_field=None, max_length=None)
-    adhesion = models.DateField(auto_now=False, auto_now_add=False, default='2015-06-24')
+    naissance = models.DateField()
+    photo = models.ImageField(upload_to='membre/identite/', height_field=None, width_field=None, max_length=None)
+    adhesion = models.DateField(auto_now=False, auto_now_add=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -62,3 +63,13 @@ class Membre(AbstractUser): # Model d'utilisateur.
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"     
+    
+# model de profile.
+class Profile(models.Model):
+    membre = models.OneToOneField(Membre, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='membre/profile')
+
+    def __str__(self): # Affichage par nom et prénom du membre.
+        return f'{self.membre.last_name} {self.membre.first_name} Profile'
+
+    

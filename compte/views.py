@@ -14,10 +14,10 @@ from django.contrib.auth import get_user_model
 from django.db.models import Sum
 
 from cotisation.forms import ReunionForm
-from cotisation.models import Deces, Don, Mensuel, MonAdhesion, NouveauNe, Rejouissance, Reunion
+from cotisation.models import Deces, Depense, Don, Entree, Mensuel, MonAdhesion, NouveauNe, Rejouissance, Reunion
 from .tests import administrateur
 from .models import Membre
-from .forms import EditerForm, MembreForm, MotDePasseChangerForm # Importation du formulaire d'inscription.
+from .forms import EditerForm, MembreForm, MotDePasseChangerForm, ProfileUpdateForm # Importation du formulaire d'inscription.
 
 # Création de vues de pages.
 
@@ -72,52 +72,9 @@ def activationPage(request, uidb64, token): # Page d'activation du compte d'un m
 def liste_membrePage(request): 
     membres = Membre.objects.all() # Afficher tous les membres.
     effectif = Membre.objects.all().count() # Effectif des membres.
-    # Total payée et impayée de chaque cotisation des membres.
-    payer_adhesion = MonAdhesion.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
-    impayer_adhesion = MonAdhesion.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
-    payer_mensuel = Mensuel.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
-    impayer_mensuel = Mensuel.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
-    payer_naissance = NouveauNe.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
-    impayer_naissance = NouveauNe.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
-    payer_rejouissance = Rejouissance.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
-    impayer_rejouissance = Rejouissance.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
-    payer_don = Don.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
-    impayer_don = Don.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
-    payer_deces = Deces.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
-    impayer_deces = Deces.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
-    # La conversion de la valeur None à 0 (chifre zéro).
-    if payer_adhesion is None:
-        payer_adhesion = 0
-    if impayer_adhesion is None:
-        impayer_adhesion = 0
-    if payer_mensuel is None:
-        payer_mensuel = 0
-    if impayer_mensuel is None:
-        impayer_mensuel = 0
-    if payer_naissance is None:
-        payer_naissance = 0
-    if impayer_naissance is None:
-        impayer_naissance = 0
-    if payer_rejouissance is None:
-        payer_rejouissance = 0
-    if impayer_rejouissance is None:
-        impayer_rejouissance = 0
-    if payer_don is None:
-        payer_don = 0
-    if impayer_don is None:
-        impayer_don = 0
-    if payer_deces is None:
-        payer_deces = 0
-    if impayer_deces is None:
-        impayer_deces = 0
-    # Total payé et impayé de tous les membres.
-    total_paye = payer_adhesion + payer_mensuel + payer_naissance + payer_rejouissance + payer_don + payer_deces
-    total_impaye = impayer_adhesion + impayer_mensuel + impayer_naissance + impayer_rejouissance + impayer_don + impayer_deces
     return render(request, 'compte/liste_membre.html', {
         'membre':membres, 
-        'effectif':effectif,
-        'total_paye':total_paye,
-        'total_impaye':total_impaye,
+        'effectif':effectif,        
         'title':'Administration'
         })
 
@@ -161,7 +118,6 @@ def suprimerPage(request):
 @login_required(login_url='connecte')
 def profilePage(request): 
     membre = request.user # Idendification du membre connecté.
-    effectif = Membre.objects.all().count() # L'effectif des membre.
     # La somme payée et impayée de chaque cotisation d'un membre.
     payer_adhesion = MonAdhesion.objects.filter(membre=membre, paye=True).aggregate(Sum('montant'))['montant__sum']
     impayer_adhesion = MonAdhesion.objects.filter(membre=membre, paye=False).aggregate(Sum('montant'))['montant__sum']
@@ -203,8 +159,7 @@ def profilePage(request):
     # Total payé et impayé de chaque membre.
     total_paye = payer_adhesion + payer_mensuel + payer_naissance + payer_rejouissance + payer_don + payer_deces
     total_impaye = impayer_adhesion + impayer_mensuel + impayer_naissance + impayer_rejouissance + impayer_don + impayer_deces
-    return render(request, 'compte/profile.html', {
-        'effectif':effectif, 
+    return render(request, 'compte/profile.html', { 
         'payer_adhesion':payer_adhesion, 
         'impayer_adhesion':impayer_adhesion, 
         'payer_mensuel':payer_mensuel, 
@@ -236,6 +191,22 @@ def monprofilPage(request):
     else:
         form = MotDePasseChangerForm(request.user)
     return render(request, 'compte/mon_profil.html', {'form':form, 'title':'Mon profil'})
+
+@login_required(login_url='connecte') # Page de modification du profil utilisateur.
+def profil_modifierPage(request): 
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('monprofil')
+    else:
+        form = ProfileUpdateForm(instance=request.user.profile)
+    return render(request, 'compte/profil_modifier.html', {'form':form, 'title':'Modifier profil'})
+
+@login_required(login_url='connecte') # Page de supression du profil utilisateur.
+def profil_suprimerPage(request): 
+    return render(request, 'compte/profil_suprimer.html', {'title':'Suprimer profil'})
+
 
 # Page d'aide.
 @login_required(login_url='connecte')
@@ -278,3 +249,72 @@ def reunion_editerPage(request, pk): # Page de modification dùappel de présenc
     else:
         form = ReunionForm(instance=reunion)
     return render(request, 'reunion_editer.html', {'form':form, 'reunion':reunion})
+
+
+# Informations.
+@login_required(login_url='connecte')
+def informationPage(request): # Page des informations.
+    effectif = Membre.objects.all().count() # L'effectif des membre.
+    entree = Entree.objects.all() 
+    depense = Depense.objects.all()    
+    # Total des entrées et dépenses de l'AJRDL.
+    total_entree = Entree.objects.aggregate(total=Sum('montant'))['total']
+    total_depense = Depense.objects.aggregate(total=Sum('montant'))['total']
+    # La conversion de la valeur None à 0 (chifre zéro).
+    if total_entree is None:
+        total_entree = 0
+    if total_depense is None:
+        total_depense = 0
+    # Total payée et impayée de chaque cotisation des membres.
+    payer_adhesion = MonAdhesion.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_adhesion = MonAdhesion.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_mensuel = Mensuel.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_mensuel = Mensuel.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_naissance = NouveauNe.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_naissance = NouveauNe.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_rejouissance = Rejouissance.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_rejouissance = Rejouissance.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_don = Don.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_don = Don.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_deces = Deces.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_deces = Deces.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    # La conversion de la valeur None à 0 (chifre zéro).
+    if payer_adhesion is None:
+        payer_adhesion = 0
+    if impayer_adhesion is None:
+        impayer_adhesion = 0
+    if payer_mensuel is None:
+        payer_mensuel = 0
+    if impayer_mensuel is None:
+        impayer_mensuel = 0
+    if payer_naissance is None:
+        payer_naissance = 0
+    if impayer_naissance is None:
+        impayer_naissance = 0
+    if payer_rejouissance is None:
+        payer_rejouissance = 0
+    if impayer_rejouissance is None:
+        impayer_rejouissance = 0
+    if payer_don is None:
+        payer_don = 0
+    if impayer_don is None:
+        impayer_don = 0
+    if payer_deces is None:
+        payer_deces = 0
+    if impayer_deces is None:
+        impayer_deces = 0
+    # Total payé et impayé de tous les membres.
+    total_paye = payer_adhesion + payer_mensuel + payer_naissance + payer_rejouissance + payer_don + payer_deces
+    total_impaye = impayer_adhesion + impayer_mensuel + impayer_naissance + impayer_rejouissance + impayer_don + impayer_deces
+    solde = (total_paye + total_entree) - total_depense
+    return render(request, 'compte/information.html', {
+        'effectif': effectif, 
+        'depense': depense, 
+        'entree': entree,
+        'total_entree': total_entree,
+        'total_depense': total_depense,
+        'total_paye': total_paye,
+        'total_impaye': total_impaye,
+        'solde': solde,
+        'title': 'Informations'
+        })

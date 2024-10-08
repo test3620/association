@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
 
+from .models import Profile
+
 # Affichage de tables models.
 class MembreAdmin(UserAdmin):
     """
@@ -67,3 +69,4 @@ class MembreAdmin(UserAdmin):
 
 # Enrégistrement de models.
 admin.site.register(get_user_model(), MembreAdmin)
+admin.site.register(Profile)

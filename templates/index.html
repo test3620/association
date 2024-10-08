@@ -15,29 +15,16 @@
     <!-- ======= Hero Section ======= -->
     <section id="hero">
         <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
-
             <div class="carousel-inner" role="listbox">
-                
-                <!-- Slide 1 -->
-                <div class="carousel-item active " style="background-image: url(static/img/slide/slide1.jpg);">
-                    <div class="carousel-container">
-                        
+                {% for diaporama in diaporama %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ diaporama.image.url }}" class="d-block w-100 " alt="{{ diaporama.title }}">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>{{ diaporama.titre }}</h5>
+                            <p>{{ diaporama.intitule }}</p>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Slide 2 -->
-                <div class="carousel-item" style="background-image: url(static/img/slide/slide2.jpg);">
-                    <div class="carousel-container">
-                        
-                    </div>
-                </div>
-
-                <!-- Slide 3 -->
-                <div class="carousel-item" style="background-image: url(static/img/slide/slide3.jpg);">
-                    <div class="carousel-container">
-                        
-                    </div>
-                </div>
+                {% endfor %}    
             </div>
 
             <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
@@ -55,21 +42,23 @@
     <!-- ======= Cta Section ======= -->
     <section id="cta" class="cta">
         <div class="container">
-
             <div class="row">
                 <div class="col-lg-9 text-center text-lg-left">
-                    <h3>Elle compte 30 <span>membres</span></h3>
+                    {% if effectif <= 1 %}
+                        <h3>{{ effectif }} <span>membre</span></h3>
+                    {% else %}
+                        <h3>{{ effectif }} <span>membres</span></h3>
+                    {% endif %}
                     <p></p>
                 </div>
                 <div class="col-lg-3 cta-btn-container text-center">
                     <a class="cta-btn align-middle" href="{% url "membre" %}">VOIR</a>
                 </div>
             </div>
-
         </div>
     </section><!-- End Cta Section -->
 
-    <h3 class="text-center text-primary bg-dark">A propos</h3>
+    <h3 class="text-center text-primary bg-dark" id="propos">A propos</h3>
 
     <!-- ======= Services Section ======= -->
     <section id="services" class="services">
@@ -127,7 +116,7 @@
         </div>
     </section><!-- End Services Section -->
 
-    <h3 class="text-center text-primary bg-dark">Galerie</h3>
+    <h3 class="text-center text-primary bg-dark" id="galerie">Galerie</h3>
 
         <!-- ======= Portfolio Section ======= -->
     <section id="portfolio" class="portfolio">
@@ -135,105 +124,28 @@
 
             <div class="row" data-aos="fade-up">
                 <div class="col-lg-12 d-flex justify-content-center">
-                    <ul id="portfolio-flters">
+                    <ul id="portfolio-flters">                      
+                        <li data-filter=".filter-Réunion">RÉUNION</li>
+                        <li data-filter=".filter-Fête">FÊTE</li>
+                        <li data-filter=".filter-Décès">DÉCÈS</li>
                         <li data-filter="*" class="filter-active">TOUT</li>
-                        <li data-filter=".filter-app">RÉUNION</li>
-                        <li data-filter=".filter-card">FÊTE</li>
-                        <li data-filter=".filter-web">DÉCÈS</li>
                     </ul>
                 </div>
             </div>
-
+ 
             <div class="row portfolio-container" data-aos="fade-up">
-                <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                    <img src="{% static "img/portfolio/portfolio.jpg" %}" class="img-fluid" alt="" width=100% height=10%/>
-                    <div class="portfolio-info">
-                        <h4>Réunion 1</h4>
-                        <p>Réunion</p>
-                        <a href="{% static "img/portfolio/portfolio-1.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                {% for galerie in galerie %}
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-{{ galerie.titre }}">
+                        <img src="{{ galerie.image.url }}" class="img-fluid" alt="" width=100% height=10%/>
+                        <div class="portfolio-info">
+                            <h4>{{ galerie.titre }} {{ galerie.intitule }}</h4>
+                            <p>{{ galerie.date }}</p>
+                            <a href="{{ galerie.image.url }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ galerie.titre }} {{ galerie.intitule }}">
+                                <i class="bx bx-plus"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                    <img src="{% static "img/portfolio/portfolio7.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Décès 3</h4>
-                        <p>Décès</p>
-                        <a href="{% static "img/portfolio/portfolio-2.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                    <img src="{% static "img/portfolio/portfolio.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Réunion 2</h4>
-                        <p>Réunion</p>
-                        <a href="{% static "img/portfolio/portfolio-3.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 2"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                    <img src="{% static "img/portfolio/portfolio3.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Fête 2</h4>
-                        <p>Fête</p>
-                        <a href="{% static "img/portfolio/portfolio-4.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 2"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                    <img src="{% static "img/portfolio/portfolio7.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Décès 2</h4>
-                        <p>Décès</p>
-                        <a href="{% static "img/portfolio/portfolio-5.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 2"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                    <img src="{% static "img/portfolio/portfolio.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Réunion 3</h4>
-                        <p>Réunion</p>
-                        <a href="{% static "img/portfolio/portfolio-6.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 3"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                    <img src="{% static "img/portfolio/portfolio3.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Fête 1</h4>
-                        <p>Fête</p>
-                        <a href="{% static "img/portfolio/portfolio-7.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 1"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                    <img src="{% static "img/portfolio/portfolio3.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Fête 3</h4>
-                        <p>Fête</p>
-                        <a href="{% static "img/portfolio/portfolio-8.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 3"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                    <img src="{% static "img/portfolio/portfolio7.jpg" %}" class="img-fluid" alt="" width=100% height=100%>
-                    <div class="portfolio-info">
-                        <h4>Décès 3</h4>
-                        <p>Décès</p>
-                        <a href="{% static "img/portfolio/portfolio-9.jpg" %}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
-                        <a href="#" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-                    </div>
-                </div>
+                {% endfor %}      
             </div>
         </div>
     </section><!-- End Portfolio Section -->       

@@ -1,7 +1,7 @@
 # Importation de modules.
 from django.urls import path
 
-from .views import adhesion_ajouterPage, adhesion_editerPage, adhesionPage, deces_ajouterPage, deces_editerPage, decesPage, don_ajouterPage, don_editerPage, donPage, mensuel_ajouterPage, mensuel_editerPage, mensuelPage, naissance_ajouterPage, naissance_editerPage, naissancePage, rejouissance_ajouterPage, rejouissance_editerPage, rejouissancePage # Importation de vues de pages.
+from .views import adhesion_ajouterPage, adhesion_editerPage, adhesionPage, comptabilitePage, deces_ajouterPage, deces_editerPage, decesPage, depense_ajouterPage, depense_editerPage, don_ajouterPage, don_editerPage, donPage, entree_ajouterPage, entree_editerPage, mensuel_ajouterPage, mensuel_editerPage, mensuelPage, naissance_ajouterPage, naissance_editerPage, naissancePage, rejouissance_ajouterPage, rejouissance_editerPage, rejouissancePage # Importation de vues de pages.
 
 urlpatterns = [
     path('mensuel/', mensuelPage, name='mensuel'),
@@ -22,4 +22,9 @@ urlpatterns = [
     path('deces/', decesPage, name='deces'),
     path('deces ajoutee/', deces_ajouterPage, name='deces_ajoute'),    
     path('deces editee/<int:pk>/', deces_editerPage, name='deces_edite'),  
+    path('', comptabilitePage, name='comptable'),
+    path('entree ajoutee/', entree_ajouterPage, name='entree_ajoute'),    
+    path('entree editee/<int:pk>/', entree_editerPage, name='entree_edite'),  
+    path('depense ajoutee/', depense_ajouterPage, name='depense_ajoute'),    
+    path('depense editee/<int:pk>/', depense_editerPage, name='depense_edite'),  
 ]

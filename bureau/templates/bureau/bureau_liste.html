@@ -31,7 +31,7 @@
                 <div class="col-lg-8">
                     <div class="row">
 
-                        <!-- LISTE DES ACTUALTES -->
+                        <!-- LISTE DU BUREAU -->
                         <div class="col-12">
                             <div class="card recent-sales overflow-auto">
                                 <div class="card-body">
@@ -65,7 +65,44 @@
                                     </table>
                                 </div>
                             </div>
-                        </div><!-- END LISTE DES MEMBRES -->       
+                        </div><!-- END LISTE DU BUREAU -->       
+
+                        <!-- PHOTO D'ENSEMBLE -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title">Photo d'ensemble<span></span></h5>
+                                    <button class="btn btn-dark btn-sm mb-3 rounded-pill">
+                                        <a class="text-white" href="{% url "ensemble_ajoute" %}">Ajouter </a> 
+                                        <i class="bi bi-image"></i>
+                                    </button>
+                                    <table class=" table table-striped text-nowrap table-bordered">
+                                        <thead  class="text-center">
+                                            <tr>
+                                                <th>TITRE</th>
+                                                <th>PHOTO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ensemble in ensemble %}
+                                                <tr class="text-button">
+                                                    <td scope="col">
+                                                        <a class="icon" href="#" data-bs-toggle="dropdown">
+                                                            {{ ensemble.titre }}                                        
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                            <li><a class="dropdown-item" href="{% url "ensemble_edite" ensemble.id %}">Editer</a></li>
+                                                            <li><a class="dropdown-item" href="#">Suprimer</a></li>
+                                                        </ul>
+                                                    </td>
+                                                    <td scope="col">{{  ensemble.photo }}</td>              
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- END PHOTO D'ENSEMBLE -->       
                     </div>
                 </div><!-- End Left side columns -->
 

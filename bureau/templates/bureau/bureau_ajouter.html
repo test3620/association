@@ -31,7 +31,7 @@
                                     <h5 class="card-title"><span class="h1">Bureau</span></h5>
                                     <form class="row g-3 mt-3 needs-validation" novalidate method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        <div class="text-danger mt-0">{{ form.membre.errors }}</div>
+                                        <div class="text-danger mt-0">{{ form.errors }}</div>
                                         <div class="container-fluid text-white text-left bg-dark">Informations</div>
                                         <div class="col-md-6">
                                             <label for="nom" class="form-label">Nom :</label>
@@ -50,10 +50,14 @@
                                             {{ form.photo }}
                                         </div>
                                         <div class="text-center mt-10">
-                                            <button type="submit" class="btn btn-sm btn-primary rounded-pill">Ajouter <i class="bi bi-person-plus-fill"></i></button>
-                                            <button type="cancel" class="btn btn-sm btn-secondary rounded-pill"><a class="text-white" href="{% url "bureau_liste" %}">Annuler</a></button>
+                                            <button type="submit" class="btn btn-sm btn-primary rounded-pill">Ajouter 
+                                                <i class="bi bi-person-plus-fill"></i>
+                                            </button>
+                                            <button type="cancel" class="btn btn-sm btn-secondary rounded-pill">
+                                                <a class="text-white" href="{% url "bureau_liste" %}">Annuler</a>
+                                                <i class="bi bi-arrow-return-left"></i>
+                                            </button>
                                         </div>
-                                        {{form.errors}}
                                     </form><!-- End Multi Columns Form -->
                                 </div>
                             </div>

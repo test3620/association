@@ -34,8 +34,7 @@
 
                     <div class="card">
                         <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-                            <img src="{{ user.photo.url }}" alt="Profile" class="rounded-circle">
+                            <img src="{{ user.profile.image.url }}" alt="Photo de profile" class="rounded-circle">
                             <h2 class="text-nowrap">{{ user.last_name }} {{ user.first_name }}</h2>
                             <h3>{{ user.profession }}</h3>
                             <div class="social-links mt-2">
@@ -45,7 +44,6 @@
                 </div>
 
                 <div class="col-xl-8">
-
                     <div class="card">
                         <div class="card-body pt-3">
                             <!-- Bordered Tabs -->
@@ -57,17 +55,17 @@
                                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Profil</button>
                                 </li>
                                 <li class="nav-item">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">MDP</button>
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Mot de passe</button>
                                 </li>
                             </ul>
                             <div class="tab-content pt-2">
                                 <!-- Apercu du profile -->
                                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
                                     <h5 class="card-title">A propos</h5>
-                                    <p class="small">
-                                        Vous êtes originaire de Datcha, vivant à {{ user.ville }}. 
-                                        Vous ëtes {{ user.profession }} et accessible sur le {{ user.contact }}. 
-                                        Vous ëtes membre de l'AJRDL le {{ user.adhesion }}.<br> Merci !
+                                    <p class="small" style="text-align: justify">
+                                        Vous êtes originaire de Datcha, vivant à <mark>{{ user.ville }}</mark>. 
+                                        Vous ëtes <mark>{{ user.profession }}</mark> et accessible sur le <mark>{{ user.contact }}</mark>. 
+                                        Vous ëtes membre de l'AJRDL le <mark>{{ user.adhesion }}</mark>.<br> Merci !
                                     </p>
 
                                     <h5 class="card-title">Détails du profil</h5>
@@ -103,14 +101,18 @@
 
                                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                                     <!-- Profile Edit Form -->
-                                    <form>
+                                    <form method="post" enctype="multipart/form-data">
                                         <div class="row mb-3">
-                                            <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Photo</label>
-                                            <div class="col-md-8 col-lg-9">
-                                                <img src="{{user.photo.url}}" alt="Profile">
+                                            <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Photo de profile</label>
+                                            <div class="col-md-8 col-lg-9">   
+                                                <img src="{{ user.profile.image.url }}" alt="Photo de profile">            
                                                 <div class="pt-2">
-                                                    <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                                                    <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                                                    <a href="{% url "profil_modifie" %}" class="btn btn-primary btn-sm" title="Upload new profile image">
+                                                        <i class="bi bi-upload"></i>
+                                                    </a>
+                                                    <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

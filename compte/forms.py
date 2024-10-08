@@ -4,6 +4,9 @@ from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django.contrib.auth import get_user_model
 from django import forms
 
+from .models import Profile
+
+
 # Formulaire pour l'inscription d'un membre.
 class MembreForm(UserCreationForm): # Formulaire personnalisé d'utilisateur.
     """Un formulaire personnalisé pour créer de nouveaux membres."""
@@ -238,3 +241,18 @@ class MotDePasseChangerForm(PasswordChangeForm):
             'class': 'form-control', 
             'placeholder': 'Confirmez'
             })
+
+
+# Formulaire de modification d'image de profile.
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
+        widgets = {
+            'image':forms.FileInput(
+                attrs={
+                    'id':'image',
+                    'class':'form-control'
+                }
+            )
+        }

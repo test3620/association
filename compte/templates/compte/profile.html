@@ -23,25 +23,12 @@
 
                 <!-- Left side columns -->
                 <div class="col-lg-8">
-                    <div class="row">
-
-                        <!-- Effectif -->
-                        <div class="col-xxl-4 col-md-12">
-                            <div class="card info-card revenue-card">
-                                <span class="badge rounded-pill bg-info text-white">
-                                    <marquee behavior="alternate">EFFECTIF</marquee>
-                                </span>
-                                <strong class="text-center"> 
-                                    {{ effectif }} 
-                                </strong>
-                            </div>
-                        </div><!-- End Effectif -->      
-
+                    <div class="row">                
                         <!-- Payer -->
                         <div class="col-xxl-4 col-md-6">
                             <div class="card info-card revenue-card">
                                 <span class="badge rounded-pill bg-success text-white">
-                                    <marquee behavior="alternate">PAYÉ</marquee>
+                                    <marquee behavior="alternate">TOTAL DES PAYÉS</marquee>
                                 </span>
                                 <strong class="text-success text-center"> 
                                     XOF {{ total_paye }}
@@ -53,7 +40,7 @@
                         <div class="col-xxl-4 col-md-6">
                             <div class="card info-card revenue-card">
                                 <span class="badge rounded-pill bg-danger text-white">
-                                    <marquee behavior="alternate">IMPAYÉ</marquee>
+                                    <marquee behavior="alternate">TOTAL DES IMPAYÉS</marquee>
                                 </span>
                                 <strong class="text-danger text-center"> 
                                     XOF {{ total_impaye }}

@@ -1,12 +1,12 @@
 # Importation de modules.
 from django import forms
 
-from .models import Deces, Don, Mensuel, MonAdhesion, NouveauNe, Rejouissance, Reunion # Importation de models.
+from .models import Deces, Depense, Don, Entree, Mensuel, MonAdhesion, NouveauNe, Rejouissance, Reunion # Importation de models.
 
 
 # Création de formulaire pour le mensuel.
 
-# Formulaire de réunion'.
+# Formulaire de réunion.
 class ReunionForm(forms.ModelForm):
     
     class Meta:
@@ -60,7 +60,7 @@ class ReunionForm(forms.ModelForm):
         }
 
 
-# Formulaire d'adhésion'.
+# Formulaire d'adhésion.
 class AdhesionForm(forms.ModelForm):
     
     class Meta:
@@ -160,7 +160,7 @@ class MensuelForm(forms.ModelForm):
         }
 
 
-# Formulaire de naissance'.
+# Formulaire de naissance.
 class NaissanceForm(forms.ModelForm):
     
     class Meta:
@@ -209,7 +209,7 @@ class NaissanceForm(forms.ModelForm):
             ),
         }
 
-# Formulaire de réjouissance'.
+# Formulaire de réjouissance.
 class RejouissanceForm(forms.ModelForm):
     
     class Meta:
@@ -307,7 +307,7 @@ class DonForm(forms.ModelForm):
             ),
         }
 
-# Formulaire de décès'.
+# Formulaire de décès.
 class DecesForm(forms.ModelForm):
     
     class Meta:
@@ -354,4 +354,72 @@ class DecesForm(forms.ModelForm):
                     'id': 'paye',
                 }
             ),
+        }
+
+# Formulaire des entrées.
+class EntreeForm(forms.ModelForm):
+    
+    class Meta:
+        model = Entree
+        fields = '__all__'
+        widgets= {        
+            # Libellé.
+            'libelle': forms.TextInput(
+                attrs={
+                    'id': 'lieu',
+                    'class': 'form-control'
+                }
+            ),
+
+            # Montant.
+            'montant': forms.TextInput(
+                attrs={
+                    'id': 'montant',
+                    'class': 'form-control',
+                    'type': 'number'
+                }
+            ),
+
+            # Date.
+            'date': forms.TextInput(
+                attrs={
+                    'id': 'date',
+                    'class': 'form-control',
+                    'type' : 'date'
+                }
+            ),       
+        }
+
+# Formulaire de dépenses.
+class DepenseForm(forms.ModelForm):
+    
+    class Meta:
+        model = Depense
+        fields = '__all__'
+        widgets= {        
+            # Libellé.
+            'libelle': forms.TextInput(
+                attrs={
+                    'id': 'lieu',
+                    'class': 'form-control'
+                }
+            ),
+
+            # Montant.
+            'montant': forms.TextInput(
+                attrs={
+                    'id': 'montant',
+                    'class': 'form-control',
+                    'type': 'number'
+                }
+            ),
+
+            # Date.
+            'date': forms.TextInput(
+                attrs={
+                    'id': 'date',
+                    'class': 'form-control',
+                    'type' : 'date'
+                }
+            ),       
         }

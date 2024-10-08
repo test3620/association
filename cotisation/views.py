@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
 
 from compte.tests import administrateur
-from .forms import AdhesionForm, DecesForm, DonForm, MensuelForm, NaissanceForm, RejouissanceForm
-from .models import Deces, Don, Mensuel, MonAdhesion, NouveauNe, Rejouissance
+from .forms import AdhesionForm, DecesForm, DepenseForm, DonForm, EntreeForm, MensuelForm, NaissanceForm, RejouissanceForm
+from .models import Deces, Depense, Don, Entree, Mensuel, MonAdhesion, NouveauNe, Rejouissance
 
 # Création de vues de page.
 
@@ -270,3 +270,125 @@ def deces_editerPage(request, pk): # Page de modification de décès.
     else:
         form = DecesForm(instance=deces)
     return render(request, 'cotisation/deces_editer.html', {'form':form, 'deces':deces})
+
+
+# Comptabilité.
+@user_passes_test(administrateur, login_url='connecte')
+def comptabilitePage(request): # Page de Comptabilité.
+    entree = Entree.objects.all() 
+    depense = Depense.objects.all()    
+    # Total des entrées et dépenses de l'AJRDL.
+    total_entree = Entree.objects.aggregate(total=Sum('montant'))['total']
+    total_depense = Depense.objects.aggregate(total=Sum('montant'))['total']
+    # La conversion de la valeur None à 0 (chifre zéro).
+    if total_entree is None:
+        total_entree = 0
+    if total_depense is None:
+        total_depense = 0
+    # Total payée et impayée de chaque cotisation des membres.
+    payer_adhesion = MonAdhesion.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_adhesion = MonAdhesion.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_mensuel = Mensuel.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_mensuel = Mensuel.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_naissance = NouveauNe.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_naissance = NouveauNe.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_rejouissance = Rejouissance.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_rejouissance = Rejouissance.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_don = Don.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_don = Don.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    payer_deces = Deces.objects.filter(paye=True).aggregate(Sum('montant'))['montant__sum']
+    impayer_deces = Deces.objects.filter(paye=False).aggregate(Sum('montant'))['montant__sum']
+    # La conversion de la valeur None à 0 (chifre zéro).
+    if payer_adhesion is None:
+        payer_adhesion = 0
+    if impayer_adhesion is None:
+        impayer_adhesion = 0
+    if payer_mensuel is None:
+        payer_mensuel = 0
+    if impayer_mensuel is None:
+        impayer_mensuel = 0
+    if payer_naissance is None:
+        payer_naissance = 0
+    if impayer_naissance is None:
+        impayer_naissance = 0
+    if payer_rejouissance is None:
+        payer_rejouissance = 0
+    if impayer_rejouissance is None:
+        impayer_rejouissance = 0
+    if payer_don is None:
+        payer_don = 0
+    if impayer_don is None:
+        impayer_don = 0
+    if payer_deces is None:
+        payer_deces = 0
+    if impayer_deces is None:
+        impayer_deces = 0
+    # Total payé et impayé de tous les membres.
+    total_paye = payer_adhesion + payer_mensuel + payer_naissance + payer_rejouissance + payer_don + payer_deces
+    total_impaye = impayer_adhesion + impayer_mensuel + impayer_naissance + impayer_rejouissance + impayer_don + impayer_deces
+    solde = (total_paye + total_entree) - total_depense
+    return render(request, 'cotisation/comptabilite.html', {
+        'depense': depense, 
+        'entree': entree,
+        'total_entree': total_entree,
+        'total_depense': total_depense,
+        'total_paye': total_paye,
+        'total_impaye': total_impaye,
+        'solde': solde
+        })
+
+
+# Entrées.
+@user_passes_test(administrateur, login_url='connecte')
+def entree_ajouterPage(request): # Page pour ajouter une entrée .
+    if request.method  == 'POST':
+        form = EntreeForm(request.POST)
+        if form.is_valid():
+            libelle = form.cleaned_data.get('libelle')
+            form.save()
+            messages.success(request, f"Versement effectué pour { libelle }")
+            return redirect('comptable')
+    else:
+        form = EntreeForm()
+    return render(request, 'cotisation/entree_ajouter.html', {'form':form})
+
+@user_passes_test(administrateur, login_url='connecte')
+def entree_editerPage(request, pk): # Page de modification d'une entrée.
+    entree = Entree.objects.get(id=pk)
+    if request.method  == 'POST':
+        form = EntreeForm(request.POST, instance=entree)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Versement de { entree.libelle } modifiée !")
+            return redirect('comptable')
+    else:
+        form = EntreeForm(instance=entree)
+    return render(request, 'cotisation/entree_editer.html', {'form':form, 'entree':entree})
+
+
+# Dépenses.
+@user_passes_test(administrateur, login_url='connecte')
+def depense_ajouterPage(request): # Page pour ajouter une dépense effectuée.
+    if request.method  == 'POST':
+        form = DepenseForm(request.POST)
+        if form.is_valid():
+            libelle = form.cleaned_data.get('libelle')
+            form.save()
+            messages.success(request, f"Dépense effectuée pour { libelle }")
+            return redirect('comptable')
+    else:
+        form = DepenseForm()
+    return render(request, 'cotisation/depense_ajouter.html', {'form':form})
+
+@user_passes_test(administrateur, login_url='connecte')
+def depense_editerPage(request, pk): # Page de modification de dépense.
+    depense = Depense.objects.get(id=pk)
+    if request.method  == 'POST':
+        form = DepenseForm(request.POST, instance=depense)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Dépense de { depense.libelle } modifiée !")
+            return redirect('comptable')
+    else:
+        form = DepenseForm(instance=depense)
+    return render(request, 'cotisation/depense_editer.html', {'form':form, 'depense':depense})
